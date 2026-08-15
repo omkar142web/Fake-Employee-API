@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employees</title>
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 20px;
+
+      background: #212121;
+      color: #ececec;
+    }
+
+    .employee {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      margin-bottom: 15px;
+      background: #2f2f2f;
+      border: 1px solid #424242;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .employee img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+
+      border: 2px solid #555;
+    }
+
+    .employee h2 {
+      margin: 0 0 8px;
+      color: #ffffff;
+      font-size: 20px;
+    }
+
+    .employee p {
+      margin: 6px 0;
+      color: #b4b4b4;
+    }
+
+    .employee p strong {
+      color: #ececec;
+    }
+
+    .socials {
+      margin-top: 12px;
+    }
+
+    .socials a {
+      margin-right: 12px;
+      color: #10a37f;
+      text-decoration: none;
+    }
+
+    .socials a:hover {
+      color: #1ac99b;
+      text-decoration: underline;
+    }
+    </style>
+  </head>
+
+  <body>
+    <h1>Employees</h1>
+    <div id="employees"></div>
+
+    <script>
+      async function loadEmployees() {
+        const response = await fetch("http://localhost:3000/api/employees");
+        const result = await response.json();
+        const container = document.getElementById("employees");
+
+        container.innerHTML = result.data
+          .map(
+            (employee) => `
+          <div class="employee">
+
+            <img
+              src="${employee.personal.profileImage}"
+              alt="${employee.personal.fullName}"
+            />
+            <div>
+              <h2>
+                ${employee.personal.fullName}
+              </h2>
+              <p>
+                <strong>
+                  ${employee.job.title}
+                </strong>
+              </p>
+              <p>
+                ${employee.job.department}
+                ·
+                ${employee.job.location}
+              </p>
+              <p>
+                ${employee.contact.email}
+              </p>
+              <p>
+                ${employee.contact.phone}
+              </p>
+
+              <div class="socials">
+                ${
+                  employee.socials.linkedin
+                    ? `<a href="${employee.socials.linkedin}" target="_blank">LinkedIn</a>`
+                    : ""
+                }
+                ${
+                  employee.socials.github
+                    ? `<a href="${employee.socials.github}" target="_blank">GitHub</a>`
+                    : ""
+                }
+                ${
+                  employee.socials.twitter
+                    ? `<a href="${employee.socials.twitter}" target="_blank">Twitter</a>`
+                    : ""
+                }
+                ${
+                  employee.socials.website
+                    ? `<a href="${employee.socials.website}" target="_blank">Website</a>`
+                    : ""
+                }
+              </div>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+      }
+      loadEmployees();
+    </script>
+  </body>
+</html>
